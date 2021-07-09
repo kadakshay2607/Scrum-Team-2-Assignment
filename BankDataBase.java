@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Scanner;
 
 public class BankDataBase {
@@ -20,7 +19,6 @@ public class BankDataBase {
 	public BankDataBase() {
 
 	}
-
 
 	public void Insert() {
 
@@ -37,7 +35,6 @@ public class BankDataBase {
 			System.out.println("Enter the address");
 			String address = sc.nextLine();
 			Class.forName("com.mysql.jdbc.Driver");
-
 			con = DriverManager.getConnection(url, user, pwd);
 
 			String query = "insert into bank values(?,?,?,?)";
@@ -50,16 +47,14 @@ public class BankDataBase {
 			if (result != 0) {
 				System.out.println("Amount deposite is " + Balance+" Rs" );
 			}
-
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
+	
 	public void withdrawl() throws Exception  {
 
-		System.out.println("enter the id");
+		System.out.println("enter the account number ");
 		int id=sc.nextInt();
 		System.out.println("enter the amount");
 		double amount=sc.nextDouble();
@@ -73,32 +68,32 @@ public class BankDataBase {
 			int result = p.executeUpdate();
 			if (result != 0) {
 				System.out.println("withdraw amount is " + amount+"Rs");
-
+			}else {
+				System.out.println("the account number is wrong");
+				withdrawl();
 			}	
 		}
-
-
-
 	}
 	public void remainingbalance() {
 		System.out.println("Enter Account No: ");
 		int id=sc.nextInt();
 		String query3="select Balance from bank where id=?";
-
-
+		
 		try {
 			con = DriverManager.getConnection(url, user, pwd);
 			p=con.prepareStatement(query3);
 			p.setInt(1, id);
 			ResultSet result=p.executeQuery();
 			if(result.next()) {
-				System.out.println("the balance is:"+result.getDouble("Balance"));
+				System.out.println("the balance is "+result.getDouble("Balance"));
 			}else {
 				System.out.println("the account number is wrong");
+				remainingbalance();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
+		}
+		finally {
 			try {
 				con.close();
 				p.close();
